@@ -371,6 +371,35 @@ background = transform.scale(image.load("Поле.jpg"), (wx,wy))
 
 white_checkers = sprite.Group()
 black_checkers = sprite.Group()
+steps = sprite.Group()
+for i in range(3):
+    if i == 0 or i == 2:
+        sp = [22,183,344,506]
+    else:
+        sp = [103,264,425,586]
+    for j in range(4):
+        white_checker = White('Белая шашка.png',75,75,sp[j],[580,502,424][i],5)
+        white_checkers.add(white_checker)
+
+for i in range(3):
+    if i == 0 or i == 2:
+        sp = [103,264,425,586]
+    else:
+        sp = [22,183,344,506]
+    for j in range(4):
+        black_checker = White('Белая шашка.png',75,75,sp[j],[190,112,34][i],5)
+        black_checkers.add(black_checker)
+
+for i in range(8):
+    if i%2 == 0:
+        sp = [103,264,425,586]
+    else:
+        sp = [22,183,344,506]
+    for j in range(4):
+        step = White('Белая шашка.png',75,75,sp[j],[580,502,424,346,268,190,112,34][i],5)
+        steps.add(step)
+        
+'''
 white_checker_1 = White('Белая шашка.png',75,75,22,580,5) #x+161, y-78
 white_checker_2 = White('Белая шашка.png',75,75,183,580,5)
 white_checker_3 = White('Белая шашка.png',75,75,344,580,5)
@@ -418,7 +447,7 @@ black_checkers.add(black_checker_8)
 black_checkers.add(black_checker_9)
 black_checkers.add(black_checker_10)
 black_checkers.add(black_checker_11)
-black_checkers.add(black_checker_12)
+black_checkers.add(black_checker_12)'''
 
 clock = time.Clock()
 

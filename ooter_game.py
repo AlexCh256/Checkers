@@ -348,8 +348,11 @@ class GameSprite(sprite.Sprite):
         self.pl_image = pl_image
         self.speed = speed
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.x = x+1
+        self.y = y+1
+        self.rect.x = 22+81*x
+        self.rect.y = 580-78*y
+        self.queen = False
 
     def update(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
@@ -360,8 +363,10 @@ class White(GameSprite):
 class Black(GameSprite):
     pass
 
-class step(GameSprite):
-    pass
+class Step(GameSprite):
+    def f(self):
+        self.rect.x += 12
+        self.rect.y += 12
 
 wx = 686
 wy = 686
@@ -369,86 +374,46 @@ window = display.set_mode((wx,wy))
 display.set_caption("Шутер")
 background = transform.scale(image.load("Поле.jpg"), (wx,wy))
 
-white_checkers = sprite.Group()
-black_checkers = sprite.Group()
-steps = sprite.Group()
+
+white_checkers = []
+black_checkers = []
+steps = []
+
+ys = [580,502,424,346,268,190,112,34]
+xs1 = [22,183,344,506]
+xs2 = [103,264,425,586]
 for i in range(3):
     if i == 0 or i == 2:
-        sp = [22,183,344,506]
+        sp = xs1
     else:
-        sp = [103,264,425,586]
+        sp = xs2
     for j in range(4):
-        white_checker = White('Белая шашка.png',75,75,sp[j],[580,502,424][i],5)
-        white_checkers.add(white_checker)
+        white_checker = White('Белая шашка.png',75,75,2*j+i%2,i,5)
+        white_checkers.append(white_checker)
 
 for i in range(3):
     if i == 0 or i == 2:
-        sp = [103,264,425,586]
+        sp = xs2
     else:
-        sp = [22,183,344,506]
+        sp = xs1
     for j in range(4):
-        black_checker = White('Белая шашка.png',75,75,sp[j],[190,112,34][i],5)
-        black_checkers.add(black_checker)
+        black_checker = Black('Чёрная шашка.png',75,75,2*j-i%2+1,i+5,5)
+        black_checkers.append(black_checker)
 
 for i in range(8):
     if i%2 == 0:
-        sp = [103,264,425,586]
+        sp = xs1
     else:
-        sp = [22,183,344,506]
+        sp = xs2
     for j in range(4):
-        step = White('Белая шашка.png',75,75,sp[j],[580,502,424,346,268,190,112,34][i],5)
-        steps.add(step)
-        
-'''
-white_checker_1 = White('Белая шашка.png',75,75,22,580,5) #x+161, y-78
-white_checker_2 = White('Белая шашка.png',75,75,183,580,5)
-white_checker_3 = White('Белая шашка.png',75,75,344,580,5)
-white_checker_4 = White('Белая шашка.png',75,75,506,580,5)
-white_checker_5 = White('Белая шашка.png',75,75,103,502,5) 
-white_checker_6 = White('Белая шашка.png',75,75,264,502,5)
-white_checker_7 = White('Белая шашка.png',75,75,425,502,5)
-white_checker_8 = White('Белая шашка.png',75,75,586,502,5)
-white_checker_9 = White('Белая шашка.png',75,75,22,424,5)
-white_checker_10 = White('Белая шашка.png',75,75,184,424,5)
-white_checker_11 = White('Белая шашка.png',75,75,344,424,5)
-white_checker_12 = White('Белая шашка.png',75,75,506,424,5)
-white_checkers.add(white_checker_1)
-white_checkers.add(white_checker_2)
-white_checkers.add(white_checker_3)
-white_checkers.add(white_checker_4)
-white_checkers.add(white_checker_5)
-white_checkers.add(white_checker_6)
-white_checkers.add(white_checker_7)
-white_checkers.add(white_checker_8)
-white_checkers.add(white_checker_9)
-white_checkers.add(white_checker_10)
-white_checkers.add(white_checker_11)
-white_checkers.add(white_checker_12)
-black_checker_1 = Black('Чёрная шашка.png',75,75,103,190,5)
-black_checker_2 = Black('Чёрная шашка.png',75,75,264,190,5)
-black_checker_3 = Black('Чёрная шашка.png',75,75,425,190,5)
-black_checker_4 = Black('Чёрная шашка.png',75,75,586,190,5)
-black_checker_5 = Black('Чёрная шашка.png',75,75,22,112,5)
-black_checker_6 = Black('Чёрная шашка.png',75,75,184,112,5)
-black_checker_7 = Black('Чёрная шашка.png',75,75,344,112,5)
-black_checker_8 = Black('Чёрная шашка.png',75,75,506,112,5)
-black_checker_9 = Black('Чёрная шашка.png',75,75,103,34,5)
-black_checker_10 = Black('Чёрная шашка.png',75,75,264,34,5)
-black_checker_11 = Black('Чёрная шашка.png',75,75,425,34,5)
-black_checker_12 = Black('Чёрная шашка.png',75,75,586,34,5)
-black_checkers.add(black_checker_1)
-black_checkers.add(black_checker_2)
-black_checkers.add(black_checker_3)
-black_checkers.add(black_checker_4)
-black_checkers.add(black_checker_5)
-black_checkers.add(black_checker_6)
-black_checkers.add(black_checker_7)
-black_checkers.add(black_checker_8)
-black_checkers.add(black_checker_9)
-black_checkers.add(black_checker_10)
-black_checkers.add(black_checker_11)
-black_checkers.add(black_checker_12)'''
+        step = Step('Ход.png',50,50,2*j+i%2,i,5)
+        step.f()
+        steps.append(step)
 
+step = "White"
+steps_vis = []
+for i in range(32):
+    steps_vis.append(False)
 clock = time.Clock()
 
 game = True
@@ -460,8 +425,35 @@ while game:
         i.update()
     for i in black_checkers:
         i.update()
+    for i in range(32):
+        if steps_vis[i] == True:
+            steps[i].update()
 
     for e in event.get():
+        if step == 'White':
+            if e.type == MOUSEBUTTONDOWN:
+                for i in range(32):
+                    steps_vis[i] = False
+                for i in white_checkers:
+                    pos = mouse.get_pos()
+                    if i.rect.collidepoint(pos):
+                        if i.queen == 0:
+                            if i.y % 2 == 1:
+                                if i.x == 1: 
+                                    if steps_vis[i.y*4] == True:
+                                        steps_vis[i.y*4] = False
+                                    else:
+                                        steps_vis[i.y*4] = True
+                                else:
+                                    if steps_vis[int(i.y*4 + i.x/2 - 1/2)] == True and steps_vis[int(i.y*4 + x/2 - 1/2 + 1)] == True:
+                                        steps_vis[int(i.y*4 + i.x/2 - 1)] = False
+                                        steps_vis[int(i.y*4 + i.x/2 - 1 + 1)] = False
+                                    else:
+                                        steps_vis[int(i.y*4 + i.x/2 - 1)] = True
+                                        steps_vis[int(i.y*4 + i.x/2 - 1 + 1)] = True
+
+                else:
+                    pass
         if e.type == QUIT:
             game = False
 

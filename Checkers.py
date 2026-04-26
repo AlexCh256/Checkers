@@ -372,6 +372,10 @@ class Step(GameSprite):
     def f(self):
         self.rect.x += 12
         self.rect.y += 12
+    
+    def  m(self,x,y):
+        self.rect.x = 22+81*(x-1) + 12
+        self.rect.y = 580-78*(y-1) + 12
 
 wx = 686
 wy = 686
@@ -384,32 +388,17 @@ wc = []
 bc = []
 steps = []
 
-ys = [580,502,424,346,268,190,112,34]
-xs1 = [22,183,344,506]
-xs2 = [103,264,425,586]
 for i in range(3):
-    if i == 0 or i == 2:
-        sp = xs1
-    else:
-        sp = xs2
     for j in range(4):
         white_checker = White('Белая шашка.png',75,75,2*j+i%2,i,5)
         wc.append(white_checker)
 
 for i in range(3):
-    if i == 0 or i == 2:
-        sp = xs2
-    else:
-        sp = xs1
     for j in range(4):
         black_checker = Black('Чёрная шашка.png',75,75,2*j-i%2+1,i+5,5)
         bc.append(black_checker)
 
 for i in range(8):
-    if i%2 == 0:
-        sp = xs1
-    else:
-        sp = xs2
     for j in range(4):
         step = Step('Ход.png',50,50,2*j+i%2,i,5)
         step.f()
@@ -437,7 +426,12 @@ while game:
     for i in bc:
         i.update()
     for i in range(32):
+        steps[i].m(-100,-100)
+    for i in range(32):
         if coordinates[i] == "Step":
+            y = ((i) - (i)%4)/4 + 1
+            x = (i)%4*2 - y%2 + 2
+            steps[i].m(x, y)
             steps[i].update()
 
     coordinates2 = []
@@ -457,6 +451,7 @@ while game:
                         if i.queen == 0:
                             if i.y % 2 == 1:
                                 checker = j
+                                print('Белый', checker)
                                 if i.x == 1:
                                     if coordinates[i.y*4] == 'Nothing':
                                         coordinates[i.y*4] = "Step"
@@ -483,21 +478,30 @@ while game:
                     if i.rect.collidepoint(pos):
                         if i.queen == 0:
                             if i.y % 2 == 1:
-                                checker = int(i.y*4 + i.x/2 + 1/2 - 4)
+                                checker = j #int(i.y*4 + i.x/2 + 1/2 - 4) - 21
+                                print(checker)
                                 if i.x == 1:
-                                    coordinates[i.y*4-8] = "Step"
+                                    if coordinates[i.y*4-8] == "Nothing":
+                                        coordinates[i.y*4-8] = "Step"
                                 else:
-                                    coordinates[int(i.y*4 + i.x/2 - 1/2)] = "Step"  
-                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 1)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2 - 9)] == "Nothing":
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2 - 9)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 + 1/2 - 9)] == "Nothing":
+                                        coordinates[int(i.y*4 + i.x/2 + 1/2 - 9)] = "Step"
                             else:
-                                checker = int(i.y*4 + i.x/2 - 4)
+                                checker = j #int(i.y*4 + i.x/2 - 4) - 21
+                                print(checker)
                                 if i.x == 8:
-                                    coordinates[i.y*4-5] = "Step"
+                                    if coordinates[i.y*4-5] == "Nothing":
+                                        coordinates[i.y*4-5] = "Step"
                                 else:
-                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 8 + 1)] = "Step"
-                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 8)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2 - 8 + 1)] == "Nothing":
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2 - 8 + 1)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2 - 8)] == "Nothing":
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2 - 8)] = "Step"
                         else:
                             pass
+        
             for i in steps:
                 pos = mouse.get_pos()
                 if i.rect.collidepoint(pos):
@@ -507,11 +511,11 @@ while game:
                         wc[checker].move(i.x,i.y)
                         wc[checker].y = i.y
                         wc[checker].x = i.x
-                        coordinates[int(i.y*4 - 4 + i.x/2)] = 'White'
+                        coordinates[int(i.y*4 - 4 + i.x/2) - 1] = 'White'
                         break
                     else:
                         step = 'White'
-                        coordinates[int(wc[checker].y*4 - 4 + wc[checker].x/2)] = 'Nothing'
+                        coordinates[int(bc[checker].y*4 - 4 + bc[checker].x/2) - 1] = 'Nothing'
                         bc[checker].move(i.x,i.y)
                         bc[checker].y = i.y
                         bc[checker].x = i.x

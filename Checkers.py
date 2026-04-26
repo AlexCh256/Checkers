@@ -358,10 +358,15 @@ class GameSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 class White(GameSprite):
-    pass
+    def move(self, x, y):
+        self.rect.x = 22+81*(x-1)
+        self.rect.y = 580-78*(y-1)
+
 
 class Black(GameSprite):
-    pass
+    def move(self, x, y):
+        self.rect.x = 22+81*(x-1)
+        self.rect.y = 580-78*(y-1)
 
 class Step(GameSprite):
     def f(self):
@@ -375,8 +380,8 @@ display.set_caption("Шутер")
 background = transform.scale(image.load("Поле.jpg"), (wx,wy))
 
 
-white_checkers = []
-black_checkers = []
+wc = []
+bc = []
 steps = []
 
 ys = [580,502,424,346,268,190,112,34]
@@ -389,7 +394,7 @@ for i in range(3):
         sp = xs2
     for j in range(4):
         white_checker = White('Белая шашка.png',75,75,2*j+i%2,i,5)
-        white_checkers.append(white_checker)
+        wc.append(white_checker)
 
 for i in range(3):
     if i == 0 or i == 2:
@@ -398,7 +403,7 @@ for i in range(3):
         sp = xs1
     for j in range(4):
         black_checker = Black('Чёрная шашка.png',75,75,2*j-i%2+1,i+5,5)
-        black_checkers.append(black_checker)
+        bc.append(black_checker)
 
 for i in range(8):
     if i%2 == 0:
@@ -411,9 +416,15 @@ for i in range(8):
         steps.append(step)
 
 step = "White"
-steps_vis = []
-for i in range(32):
-    steps_vis.append(False)
+checker = 0
+coordinates = []
+for i in range(12):
+    coordinates.append("White")
+for i in range(8):
+    coordinates.append("Nothing")
+for i in range(12):
+    coordinates.append("Black")
+    print(coordinates)
 clock = time.Clock()
 
 game = True
@@ -421,41 +432,100 @@ finish = False
 while game:
     window.blit(background, (0,0))
 
-    for i in white_checkers:
+    for i in wc:
         i.update()
-    for i in black_checkers:
+    for i in bc:
         i.update()
     for i in range(32):
-        if steps_vis[i] == True:
+        if coordinates[i] == "Step":
             steps[i].update()
 
+    coordinates2 = []
+    for i in coordinates:
+        coordinates2.append(i)
+    
     for e in event.get():
-        if step == 'White':
-            if e.type == MOUSEBUTTONDOWN:
-                for i in range(32):
-                    steps_vis[i] = False
-                for i in white_checkers:
+        if e.type == MOUSEBUTTONDOWN:
+            for i in range(32):
+                if coordinates[i] == "Step":
+                    coordinates[i] = "Nothing"
+            if step == 'White':
+                for j in range(12):
                     pos = mouse.get_pos()
+                    i = wc[j]
                     if i.rect.collidepoint(pos):
                         if i.queen == 0:
                             if i.y % 2 == 1:
-                                if i.x == 1: 
-                                    if steps_vis[i.y*4] == True:
-                                        steps_vis[i.y*4] = False
-                                    else:
-                                        steps_vis[i.y*4] = True
+                                checker = j
+                                if i.x == 1:
+                                    if coordinates[i.y*4] == 'Nothing':
+                                        coordinates[i.y*4] = "Step"
                                 else:
-                                    if steps_vis[int(i.y*4 + i.x/2 - 1/2)] == True and steps_vis[int(i.y*4 + x/2 - 1/2 + 1)] == True:
-                                        steps_vis[int(i.y*4 + i.x/2 - 1)] = False
-                                        steps_vis[int(i.y*4 + i.x/2 - 1 + 1)] = False
-                                    else:
-                                        steps_vis[int(i.y*4 + i.x/2 - 1)] = True
-                                        steps_vis[int(i.y*4 + i.x/2 - 1 + 1)] = True
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2)] == 'Nothing':
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2 - 1)] == 'Nothing':
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2 - 1)] = "Step"
+                            else:
+                                if i.x == 8:
+                                    if coordinates[i.y*4+3] == 'Nothing':
+                                        coordinates[i.y*4+3] = "Step"
+                                else:
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2)] == 'Nothing':
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2)] = "Step"
+                                    if coordinates[int(i.y*4 + i.x/2 - 1/2 + 1)] == 'Nothing':
+                                        coordinates[int(i.y*4 + i.x/2 - 1/2 + 1)] = "Step"
+                        else:
+                            pass
+            else:
+                for j in range(12):
+                    pos = mouse.get_pos()
+                    i = bc[j]
+                    if i.rect.collidepoint(pos):
+                        if i.queen == 0:
+                            if i.y % 2 == 1:
+                                checker = int(i.y*4 + i.x/2 + 1/2 - 4)
+                                if i.x == 1:
+                                    coordinates[i.y*4-8] = "Step"
+                                else:
+                                    coordinates[int(i.y*4 + i.x/2 - 1/2)] = "Step"  
+                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 1)] = "Step"
+                            else:
+                                checker = int(i.y*4 + i.x/2 - 4)
+                                if i.x == 8:
+                                    coordinates[i.y*4-5] = "Step"
+                                else:
+                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 8 + 1)] = "Step"
+                                    coordinates[int(i.y*4 + i.x/2 - 1/2 - 8)] = "Step"
+                        else:
+                            pass
+            for i in steps:
+                pos = mouse.get_pos()
+                if i.rect.collidepoint(pos):
+                    if step == "White":
+                        step = 'Black'
+                        coordinates[int(wc[checker].y*4 - 4 + wc[checker].x/2)] = 'Nothing'
+                        wc[checker].move(i.x,i.y)
+                        wc[checker].y = i.y
+                        wc[checker].x = i.x
+                        coordinates[int(i.y*4 - 4 + i.x/2)] = 'White'
+                        break
+                    else:
+                        step = 'White'
+                        coordinates[int(wc[checker].y*4 - 4 + wc[checker].x/2)] = 'Nothing'
+                        bc[checker].move(i.x,i.y)
+                        bc[checker].y = i.y
+                        bc[checker].x = i.x
+                        coordinates[int(i.y*4 - 4 + i.x/2)] = 'Black'
+                        break
 
-                else:
-                    pass
+        
+
+        
         if e.type == QUIT:
             game = False
+
+    if coordinates2 != coordinates:
+        print(coordinates)
 
     clock.tick(60)
     display.update()

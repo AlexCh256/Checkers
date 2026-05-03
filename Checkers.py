@@ -130,12 +130,13 @@ while game:
     for i in coordinates:
         coordinates2.append(i)
     
+    #Отображение кружков ходов:
     for e in event.get():
         if e.type == MOUSEBUTTONDOWN:
             for i in range(32):
                 if coordinates[int(i/4)][i%4] == "Step" or coordinates[int(i/4)][i%4] == "Kill_step":
                     coordinates[int(i/4)][i%4] = "Nothing"
-            if step == 'White':
+            if step == 'White': #Белые
                 for j in range(len(wc)):
                     pos = mouse.get_pos()
                     i = wc[j]
@@ -143,7 +144,6 @@ while game:
                         if i.queen == 0:
                             if i.y % 2 == 1:
                                 checker = j
-                                #print('Белый', checker)
                                 if i.x == 1:
                                     if coordinates[i.y][ceil(i.x/2)-1] == 'Nothing':
                                         coordinates[i.y][ceil(i.x/2)-1] = "Step"
@@ -183,7 +183,6 @@ while game:
                                                     kill_checker = k
                             else:
                                 checker = j
-                                #print('Белый', checker)
                                 if i.x == 8:
                                     if coordinates[i.y][ceil(i.x/2)-1] == 'Nothing':
                                         coordinates[i.y][ceil(i.x/2)-1] = "Step"
@@ -203,7 +202,6 @@ while game:
                                     if coordinates[i.y][ceil(i.x/2)-1] == 'Nothing':
                                         coordinates[i.y][ceil(i.x/2)-1] = "Step"
                                 else:
-                                    print(coordinates[i.y][ceil(i.x/2)-1],coordinates[i.y+1][ceil(i.x/2)-2])
                                     if coordinates[i.y][ceil(i.x/2)-1] == 'Nothing':
                                         coordinates[i.y][ceil(i.x/2)-1] = "Step"
                                     elif coordinates[i.y][ceil(i.x/2)-1] == 'Black' and coordinates[i.y+1][ceil(i.x/2)-2] == 'Nothing':
@@ -218,6 +216,59 @@ while game:
                                         for k in range(len(bc)):
                                             if bc[k].y == i.y+1 and bc[k].x == i.x+1:
                                                 kill_checker = k
+                            if i.y != 1 and i.y != 2:
+                                checker = j
+                                if i.y % 2 == 1:
+                                    if i.x == 1:
+                                        if coordinates[i.y-2][ceil(i.x/2)-1] == "Black" and coordinates[i.y-3][ceil(i.x/2)] == "Nothnig":
+                                            coordinates[i.y-3][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x+1:
+                                                    kill_checker = k
+                                    elif i.x == 7:
+                                        if coordinates[i.y-2][ceil(i.x/2)-2] == "Black" and coordinates[i.y-3][ceil(i.x/2)-2] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x-1:
+                                                    kill_checker = k
+                                    else:
+                                        if coordinates[i.y-2][ceil(i.x/2)-2] == "Black" and coordinates[i.y-3][ceil(i.x/2)-2] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)-2] = 'Kill_step'
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x-1:
+                                                    kill_checker = k
+                                        if coordinates[i.y-2][ceil(i.x/2)-1] == "Black" and coordinates[i.y-3][ceil(i.x/2)] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)] = 'Kill_step'
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x+1:
+                                                    kill_checker = k
+                                else:
+                                    checker = j
+                                    if i.x == 8:
+                                        if coordinates[i.y-2][ceil(i.x/2)-1] == "Black"and coordinates[i.y-3][ceil(i.x/2)-2] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x-1:
+                                                    kill_checker = k
+                                    if i.x == 2:
+                                        if coordinates[i.y-2][ceil(i.x/2)] == "Black" and coordinates[i.y-3][ceil(i.x/2)] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x+1:
+                                                    kill_checker = k
+                                    else:
+                                        if coordinates[i.y-2][ceil(i.x/2)] == "Black" and coordinates[i.y-3][ceil(i.x/2)] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x+1:
+                                                    kill_checker = k
+                                        if coordinates[i.y-2][ceil(i.x/2)-1] == "Black" and coordinates[i.y-3][ceil(i.x/2)-2] == "Nothing":
+                                            coordinates[i.y-3][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(bc)):
+                                                if bc[k].y == i.y-1 and bc[k].x == i.x-1:
+                                                    kill_checker = k
+                                        
+
                         else:
                             '''e = 0
                             x = i.x
@@ -228,7 +279,7 @@ while game:
                                 if coordinates[i.y-1][int(i.x/2)-1]'''
                                 
                         print(coordinates)
-            else:
+            else: #Чёрные
                 for j in range(len(bc)):
                     pos = mouse.get_pos()
                     i = bc[j]
@@ -308,9 +359,64 @@ while game:
                                             for k in range(len(wc)):
                                                 if wc[k].y == i.y-1 and wc[k].x == i.x+1:
                                                     kill_checker = k
+                            if i.y != 7 and i.y != 8:
+                                checker = j
+                                if i.y % 2 == 1:
+                                    if i.x == 1:
+                                        if coordinates[i.y][ceil(i.x/2)-1] == 'White' and coordinates[i.y+1][ceil(i.x/2)] == "Nothing":
+                                            coordinates[i.y+1][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x+1:
+                                                    kill_checker = k
+                                    if i.x == 7:
+                                        if coordinates[i.y][ceil(i.x/2)-2] == 'White' and coordinates[i.y+1][ceil(i.x/2)-2] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)-2] = 'Kill_step'
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x-1:
+                                                    kill_checker = k
+                                    else:
+                                        if coordinates[i.y][ceil(i.x/2)-2] == 'White' and coordinates[i.y+1][ceil(i.x/2)-2] == "Nothing":
+                                            coordinates[i.y+1][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x-1:
+                                                    kill_checker = k
+                                        if coordinates[i.y][ceil(i.x/2)-1] == 'While' and coordinates[i.y+1][ceil(i.x/2)] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x+1:
+                                                    kill_checker = k
+                                else:
+                                    if i.x == 8:
+                                        if coordinates[i.y][ceil(i.x/2)-1] == 'White' and coordinates[i.y+1][ceil(i.x/2)-2] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                    if wc[k].y == i.y+1 and wc[k].x == i.x-1:
+                                                        kill_checker = k
+                                    elif i.x == 2:
+                                        if coordinates[i.y][ceil(i.x/2)] == 'White' and coordinates[i.y+1][ceil(i.x/2)] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)] = 'Kill_step'
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x+1:
+                                                    kill_checker = k
+                                    else:
+                                        if coordinates[i.y][ceil(i.x/2)-1] == 'White' and coordinates[i.y+1][ceil(i.x/2)-2] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)-2] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x-1:
+                                                    kill_checker = k
+                                        if coordinates[i.y][ceil(i.x/2)] == 'White' and coordinates[i.y+1][ceil(i.x/2)] == 'Nothing':
+                                            coordinates[i.y+1][ceil(i.x/2)] = "Kill_step"
+                                            for k in range(len(wc)):
+                                                if wc[k].y == i.y+1 and wc[k].x == i.x+1:
+                                                    kill_checker = k
+
+
+
                         else:
                             pass
                         print(coordinates)
+            
+            #Хождение:
             for i in steps:
                 pos = mouse.get_pos()
                 if i.rect.collidepoint(pos):
@@ -326,7 +432,6 @@ while game:
                         print(coordinates)
                         break
                     else:
-                        print(bc[checker].x, bc[checker].y, i.x, i.y)
                         step = 'White'
                         coordinates[bc[checker].y-1][ceil(bc[checker].x/2)-1] = 'Nothing'
                         bc[checker].move(i.x,i.y)
@@ -344,14 +449,12 @@ while game:
                         wc[checker].move(i.x,i.y)
                         wc[checker].y = i.y
                         wc[checker].x = i.x
-                        print(bc[kill_checker].y, ceil(bc[kill_checker].x/2))
                         coordinates[bc[kill_checker].y-1][ceil(bc[kill_checker].x/2)-1] = "Nothing"
                         del bc[kill_checker]
                         coordinates[i.y-1][ceil(i.x/2)-1] = 'White'
                         print(coordinates)
                         break
                     else:
-                        print(bc[checker].x, bc[checker].y, i.x, i.y)
                         step = 'White'
                         coordinates[bc[checker].y-1][ceil(bc[checker].x/2)-1] = 'Nothing'
                         bc[checker].move(i.x,i.y)

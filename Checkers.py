@@ -91,7 +91,7 @@ for i in range(8):
 
 for i in range(8):
     for j in range(4):
-        kill_step = Kill_step('Убийственный ход.png',50,50,2*j+i%2,i)
+        kill_step = Kill_step('Ход.png',50,50,2*j+i%2,i)
         kill_step.f()
         kill_steps.append(kill_step)
 
@@ -610,7 +610,7 @@ while game:
                                     end = 1
                         print(coordinates)
             
-            #Хождение:
+            #Ход:
             for i in steps:
                 pos = mouse.get_pos()
                 if i.rect.collidepoint(pos):
